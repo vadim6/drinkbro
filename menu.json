@@ -1,0 +1,17 @@
+{
+  "customizations": {
+    "sugar":   { "label": "Sugar",   "type": "toggle", "default": false },
+    "milk":    { "label": "Milk",    "type": "select", "options": ["Whole", "Oat", "Almond", "Soy"], "default": "Whole" },
+    "size":    { "label": "Size",    "type": "select", "options": ["Single", "Double"], "default": "Single" },
+    "teaType": { "label": "Type",    "type": "select", "options": ["Green", "Black", "Chamomile"], "default": "Black" },
+    "temp":    { "label": "Iced",    "type": "toggle", "default": false }
+  },
+  "drinks": [
+    { "id": "espresso",   "name": "Espresso",   "emoji": "☕", "customizations": ["size", "sugar"] },
+    { "id": "flatwhite",      "name": "Flat White",      "emoji": "🥛", "customizations": ["milk", "temp", "sugar"] },
+    { "id": "cappuccino", "name": "Cappuccino", "emoji": "☕", "customizations": ["milk", "sugar"] },
+    { "id": "tea",        "name": "Tea",        "emoji": "🍵", "customizations": ["teaType", "temp", "sugar"] },
+    { "id": "water",      "name": "Water",      "emoji": "💧", "customizations": ["temp"] },
+    { "id": "juice",      "name": "Juice",      "emoji": "🧃", "customizations": [] }
+  ]
+}

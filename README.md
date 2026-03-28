@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DrinkBro
 
-## Getting Started
+A minimal drink ordering app for small gatherings. Guests browse a menu and place orders; whoever's making drinks watches a live queue on the admin screen.
 
-First, run the development server:
+Built with Next.js, SQLite (via better-sqlite3), and Server-Sent Events for real-time updates.
+
+## How it works
+
+- **Guest view** (`/drink`) — pick a drink, add your name, tap to order
+- **Admin view** (`/admin`) — live order queue, tap to mark done, reset to clear all
+
+> **Note:** The admin page has no authentication. It's intended for trusted local networks (e.g. a party at home). Don't expose this publicly without adding auth.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To test from another device on your local network, add your machine's IP to `next.config.ts`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```ts
+allowedDevOrigins: ["192.168.x.x"],
+```
 
-## Learn More
+## Customizing the menu
 
-To learn more about Next.js, take a look at the following resources:
+Edit `menu.json`. Each drink references customization IDs defined in the `customizations` map.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```json
+{
+  "customizations": {
+    "milk": { "label": "Milk", "type": "select", "options": ["Whole", "Oat"], "default": "Whole" },
+    "sugar": { "label": "Sugar", "type": "toggle", "default": false }
+  },
+  "drinks": [
+    { "id": "latte", "name": "Latte", "emoji": "☕", "customizations": ["milk", "sugar"] }
+  ]
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Customization types:
+- `toggle` — checkbox, adds the label when true
+- `select` — dropdown from `options`, shown when not the default
 
-## Deploy on Vercel
+## Deploying
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The app uses SQLite on disk. For persistent storage across restarts, mount a volume and set `DB_PATH`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Fly.io
+
+```bash
+fly launch
+fly volumes create drinkbro_data --size 1
+fly deploy
+```
+
+The included `fly.toml` and `Dockerfile` are ready to go. The DB is stored at `/data/orders.db` on the mounted volume.
+
+### Docker
+
+```bash
+docker build -t drinkbro .
+docker run -p 3000:3000 -v ./data:/data drinkbro
+```
+
+## Tech stack
+
+- [Next.js 16](https://nextjs.org) (App Router, standalone output)
+- [better-sqlite3](https://github.com/WiseLibs/better-sqlite3)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- Server-Sent Events for live queue updates

@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ["better-sqlite3"],
+  output: "standalone",
+  // allowedDevOrigins: ["192.168.x.x"], // Add your local IP if testing from another device
 };
 
 export default nextConfig;
