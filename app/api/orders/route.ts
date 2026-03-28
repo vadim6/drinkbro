@@ -18,6 +18,9 @@ export async function POST(request: Request) {
   if (!guest_name?.trim() || !drink_id || !drink_name) {
     return Response.json({ error: "Missing required fields" }, { status: 400 });
   }
+  if (guest_name.trim().length > 50 || drink_id.length > 50 || drink_name.length > 100) {
+    return Response.json({ error: "Input too long" }, { status: 400 });
+  }
 
   const db = getDb();
   const result = db

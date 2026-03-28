@@ -17,11 +17,14 @@ COPY . .
 RUN npm run build
 
 # Production image
-FROM base AS runner
+FROM node:20-alpine AS runner
+RUN apk add --no-cache tini
 ENV NODE_ENV=production
 ENV DB_PATH=/data/orders.db
 
 WORKDIR /app
+
+RUN mkdir -p /data
 
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
@@ -30,4 +33,5 @@ COPY --from=builder /app/menu.json ./menu.json
 
 EXPOSE 3000
 
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "server.js"]

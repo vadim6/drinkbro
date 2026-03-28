@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import DrinkView from "./[slug]/DrinkView";
+import BaristaView from "./[slug]/BaristaView";
 
 export default function Page() {
   if (process.env.HASH_SLUG) notFound();
-  return <DrinkView slug="" />;
+  return <BaristaView slug="" />;
 }

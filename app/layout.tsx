@@ -17,6 +17,7 @@ const lora = Lora({
 export const metadata: Metadata = {
   title: "DrinkBro",
   description: "Order your drink, bro",
+  icons: { icon: "/favicon.svg" },
 };
 
 export const viewport: Viewport = {
@@ -35,7 +36,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${lora.variable} h-full`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <div className="min-h-full max-w-md mx-auto shadow-xl flex flex-col">
+          <div className="flex-1 flex flex-col">{children}</div>
+          <footer className="px-5 py-4 text-center bg-brew">
+            <a
+              href="https://github.com/vadim6/drinkbro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-muted hover:text-bark transition-colors"
+            >
+              Made with 🤍 by Vadim Freger
+            </a>
+          </footer>
+        </div>
+      </body>
     </html>
   );
 }

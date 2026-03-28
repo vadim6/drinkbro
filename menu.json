@@ -10,6 +10,7 @@
     { "id": "espresso",   "name": "Espresso",   "emoji": "☕", "customizations": ["size", "sugar"] },
     { "id": "flatwhite",      "name": "Flat White",      "emoji": "🥛", "customizations": ["milk", "temp", "sugar"] },
     { "id": "cappuccino", "name": "Cappuccino", "emoji": "☕", "customizations": ["milk", "sugar"] },
+    { "id": "matchalatte", "name": "Matcha Latte", "emoji": "☕", "customizations": ["milk", "sugar"] },
     { "id": "tea",        "name": "Tea",        "emoji": "🍵", "customizations": ["teaType", "temp", "sugar"] },
     { "id": "water",      "name": "Water",      "emoji": "💧", "customizations": ["temp"] },
     { "id": "juice",      "name": "Juice",      "emoji": "🧃", "customizations": [] }
