@@ -15,8 +15,12 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://drinkbro-app.vercel.app"),
   title: "DrinkBro",
   description: "Order your drink, bro",
+  openGraph: {
+    images: ["/opengraph-image"],
+  },
 };
 
 export const viewport: Viewport = {
