@@ -1,5 +1,4 @@
-import { getDb, type Order } from "@/lib/db";
-import { orderEmitter } from "@/lib/emitter";
+import { updateOrderStatus, initDb } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -15,20 +14,12 @@ export async function PATCH(
     return Response.json({ error: "Invalid status" }, { status: 400 });
   }
 
-  const db = getDb();
-  const result = db
-    .prepare("UPDATE orders SET status = ? WHERE id = ?")
-    .run(status, id);
+  await initDb();
+  const { changes, order } = await updateOrderStatus(id, status);
 
-  if (result.changes === 0) {
+  if (changes === 0) {
     return Response.json({ error: "Order not found" }, { status: 404 });
   }
-
-  const order = db
-    .prepare("SELECT * FROM orders WHERE id = ?")
-    .get(id) as Order;
-
-  orderEmitter.emit("update", { type: "order_updated", order });
 
   return Response.json(order);
 }

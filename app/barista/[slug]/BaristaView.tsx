@@ -73,15 +73,7 @@ export default function AdminPage({ slug }: { slug: string }) {
 
     es.onmessage = (e) => {
       const event = JSON.parse(e.data);
-      if (event.type === "new_order") {
-        setOrders((prev) => [event.order, ...prev]);
-      } else if (event.type === "order_updated") {
-        setOrders((prev) =>
-          prev.map((o) => (o.id === event.order.id ? event.order : o))
-        );
-      } else if (event.type === "reset") {
-        setOrders([]);
-      }
+      if (event.type === "snapshot") setOrders(event.orders);
     };
 
     return () => es.close();

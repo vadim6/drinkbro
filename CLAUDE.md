@@ -7,10 +7,10 @@ A drink ordering app for small gatherings (e.g. dinner parties). Guests order dr
 ## Tech Stack
 
 - **Framework:** Next.js (App Router, server components), React, TypeScript
-- **Database:** SQLite via `better-sqlite3` (WAL mode), file at `orders.db` (or `$DB_PATH` in prod)
+- **Database:** SQLite via Turso (libSQL remote), `@libsql/client/web` (async, fetch-based)
 - **Styling:** Tailwind CSS v4, custom warm coffee-shop color theme
-- **Real-time:** Server-Sent Events (SSE) via Node.js `EventEmitter`
-- **Deployment:** Docker (multi-stage Alpine), Fly.io
+- **Real-time:** Server-Sent Events (SSE) via Edge Runtime — stream polls Turso every 2s
+- **Deployment:** Vercel (serverless + edge functions)
 
 ## Project Structure
 
@@ -32,14 +32,11 @@ drinkbro/
 │       ├── orders/stream/route.ts       # GET /api/orders/stream — SSE feed
 │       └── orders/[id]/route.ts         # PATCH /api/orders/:id — update status
 ├── lib/
-│   ├── db.ts                            # getDb() singleton, Order type, schema init
-│   ├── menu.ts                          # Menu/DrinkDef/CustomizationDef types, menu loader
-│   └── emitter.ts                       # Global orderEmitter (EventEmitter) for SSE broadcast
+│   ├── db.ts                            # getClient() + async helpers, Order type, schema init
+│   └── menu.ts                          # Menu/DrinkDef/CustomizationDef types, menu loader
 ├── public/                              # Static assets (logo.svg, barista.png)
 ├── menu.json                            # Drink definitions + customization options
-├── next.config.ts                       # better-sqlite3 as server-only, standalone output, CORS
-├── Dockerfile                           # Multi-stage Alpine build
-└── fly.toml                             # Fly.io deployment config
+└── next.config.ts                       # allowedDevOrigins
 ```
 
 ## Key Concepts
@@ -50,20 +47,22 @@ drinkbro/
 
 **Orders:** Stored in SQLite. `customizations` column is a JSON string. Status field tracks order lifecycle (`pending` → `done`, revertible).
 
-**Real-time flow:** `POST /api/orders` → writes to DB → emits on `orderEmitter` → SSE stream pushes event → barista page updates live.
+**Real-time flow:** `POST /api/orders` → writes to DB → SSE stream detects change on next 2s poll → sends `{ type: "snapshot", orders: [...] }` → barista page updates live.
 
-**DB singleton:** `getDb()` in `lib/db.ts` caches the connection on `globalThis` to survive hot reloads in dev.
+**DB client:** `getClient()` in `lib/db.ts` caches the Turso client on `globalThis` to survive hot reloads in dev. All DB functions are async.
 
 ## Environment Variables
 
 | Variable | Description |
 |----------|-------------|
-| `HASH_SLUG` | Secret URL slug. Generate with `openssl rand -hex 8`. Set via `fly secrets set` in prod. |
-| `DB_PATH` | Path to SQLite file. Defaults to `orders.db` in project root. |
+| `HASH_SLUG` | Secret URL slug. Generate with `openssl rand -hex 8`. Set in Vercel env vars in prod. |
+| `TURSO_DATABASE_URL` | Turso DB URL. Must be `https://` form (not `libsql://`). For local dev: `http://127.0.0.1:8080`. |
+| `TURSO_AUTH_TOKEN` | Turso auth token. Leave empty for local dev. |
 
 ## Commands
 
 ```bash
+npm run dev:db   # Local libSQL server on port 8080 (run in separate terminal)
 npm run dev      # Dev server on localhost:3000
 npm run build    # Production build
 npm run start    # Run production server

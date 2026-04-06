@@ -2,7 +2,7 @@
 
 A minimal drink ordering app for small gatherings. Guests browse a menu and place orders; whoever's making drinks watches a live queue on the barista screen.
 
-Built with Next.js, SQLite (via better-sqlite3), and Server-Sent Events for real-time updates.
+Built with Next.js, Turso (SQLite), and Server-Sent Events for real-time updates.
 
 ## How it works
 
@@ -16,16 +16,24 @@ Access is gated by a secret URL slug. Generate one and share it as a QR code —
 
 ```bash
 npm install
-npm run dev
 ```
 
 Create a `.env.local` file (gitignored):
 
 ```
+TURSO_DATABASE_URL=http://127.0.0.1:8080
+TURSO_AUTH_TOKEN=
 HASH_SLUG=your_secret_slug
 ```
 
-Then open `http://localhost:3000/drink/your_secret_slug`.
+Then start the local database server and dev server in separate terminals:
+
+```bash
+npm run dev:db   # terminal 1 — local libSQL server on port 8080
+npm run dev      # terminal 2 — Next.js on localhost:3000
+```
+
+Open `http://localhost:3000/drink/your_secret_slug`.
 
 If `HASH_SLUG` is not set, any slug is accepted (useful for local development).
 
@@ -61,31 +69,31 @@ Customization types:
 - `toggle` — checkbox, adds the label when true
 - `select` — dropdown from `options`, shown when not the default
 
-## Deploying
+## Deploying to Vercel + Turso
 
-The app uses SQLite on disk. For persistent storage across restarts, mount a volume and set `DB_PATH`.
-
-### Fly.io
+### 1. Create a Turso database
 
 ```bash
-fly launch
-fly volumes create drinkbro_data --size 1
-fly secrets set HASH_SLUG=your_secret_slug
-fly deploy
+turso db create drinkbro
+turso db show drinkbro           # copy the https:// URL
+turso db tokens create drinkbro  # copy the token
 ```
 
-The included `fly.toml` and `Dockerfile` are ready to go. The DB is stored at `/data/orders.db` on the mounted volume.
+### 2. Deploy to Vercel
 
-### Docker
+Push to GitHub, import the project on Vercel, and set these environment variables:
 
-```bash
-docker build -t drinkbro .
-docker run -p 3000:3000 -e HASH_SLUG=your_secret_slug -v ./data:/data drinkbro
-```
+| Variable | Value |
+|----------|-------|
+| `TURSO_DATABASE_URL` | `https://your-db.turso.io` (must be `https://`, not `libsql://`) |
+| `TURSO_AUTH_TOKEN` | token from `turso db tokens create` |
+| `HASH_SLUG` | your secret slug |
+
+The database table is created automatically on first request.
 
 ## Tech stack
 
-- [Next.js](https://nextjs.org) (App Router, standalone output)
-- [better-sqlite3](https://github.com/WiseLibs/better-sqlite3)
+- [Next.js](https://nextjs.org) (App Router, serverless + edge functions)
+- [Turso](https://turso.tech) (libSQL remote SQLite, `@libsql/client`)
 - [Tailwind CSS v4](https://tailwindcss.com)
-- Server-Sent Events for live queue updates
+- Server-Sent Events for live queue updates (Edge Runtime, polls DB every 2s)

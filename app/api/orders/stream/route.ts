@@ -1,13 +1,28 @@
-import { orderEmitter } from "@/lib/emitter";
-
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
+
+import { getClient } from "@/lib/db";
+import type { Order } from "@/lib/db";
+
+async function fetchSnapshot(client: ReturnType<typeof getClient>): Promise<{
+  orders: Order[];
+  hash: string;
+}> {
+  const r = await client.execute(
+    "SELECT * FROM orders ORDER BY created_at DESC"
+  );
+  const orders = r.rows as unknown as Order[];
+  const hash = orders.map((o) => `${o.id}:${o.status}`).join(",");
+  return { orders, hash };
+}
 
 export async function GET() {
   const encoder = new TextEncoder();
-  let cleanup: (() => void) | undefined;
+  const client = getClient();
+  let intervalId: ReturnType<typeof setInterval> | undefined;
 
   const stream = new ReadableStream({
-    start(controller) {
+    async start(controller) {
       const send = (payload: unknown) => {
         controller.enqueue(
           encoder.encode(`data: ${JSON.stringify(payload)}\n\n`)
@@ -16,32 +31,30 @@ export async function GET() {
 
       send({ type: "connected" });
 
-      const handler = (payload: unknown) => {
+      let { orders, hash: lastHash } = await fetchSnapshot(client);
+      send({ type: "snapshot", orders });
+
+      intervalId = setInterval(async () => {
         try {
-          send(payload);
+          const { orders: next, hash } = await fetchSnapshot(client);
+          if (hash !== lastHash) {
+            lastHash = hash;
+            send({ type: "snapshot", orders: next });
+          } else {
+            send({ type: "ping" });
+          }
         } catch {
-          orderEmitter.off("update", handler);
+          clearInterval(intervalId);
+          try {
+            controller.close();
+          } catch {
+            /* already closed */
+          }
         }
-      };
-
-      orderEmitter.on("update", handler);
-
-      const interval = setInterval(() => {
-        try {
-          send({ type: "ping" });
-        } catch {
-          clearInterval(interval);
-          orderEmitter.off("update", handler);
-        }
-      }, 25000);
-
-      cleanup = () => {
-        clearInterval(interval);
-        orderEmitter.off("update", handler);
-      };
+      }, 2000);
     },
     cancel() {
-      cleanup?.();
+      clearInterval(intervalId);
     },
   });
 
