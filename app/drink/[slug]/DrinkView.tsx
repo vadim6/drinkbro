@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Menu, DrinkDef, CustomizationDef } from "@/lib/menu";
+import { DrinkIcon } from "@/components/DrinkIcon";
 
 type CustomizationValues = Record<string, boolean | string>;
 
@@ -113,7 +114,7 @@ export default function DrinkPage({ slug }: { slug: string }) {
         }),
       });
       closeSheet();
-      showToast(`${selected.emoji} ${selected.name} is on its way!`);
+      showToast(`${selected.emoji.startsWith("/") ? "" : selected.emoji + " "}${selected.name} is on its way!`);
     } finally {
       setSubmitting(false);
     }
@@ -183,7 +184,7 @@ export default function DrinkPage({ slug }: { slug: string }) {
             onClick={() => openDrink(drink)}
             className="flex flex-col items-center justify-center gap-2 bg-card rounded-3xl shadow-sm py-7 px-4 active:scale-95 transition-transform duration-100 border border-tan/40"
           >
-            <span className="text-5xl leading-none">{drink.emoji}</span>
+            <DrinkIcon icon={drink.emoji} emojiClassName="text-5xl leading-none" imgClassName="h-14 w-auto" />
             <span className="text-sm font-semibold text-bark tracking-wide">
               {drink.name}
             </span>
@@ -222,7 +223,7 @@ export default function DrinkPage({ slug }: { slug: string }) {
             <div className="px-5 pt-3 pb-4">
               {/* Title */}
               <div className="flex items-center gap-3 mb-5">
-                <span className="text-4xl">{selected.emoji}</span>
+                <DrinkIcon icon={selected.emoji} emojiClassName="text-4xl" imgClassName="h-12 w-auto" />
                 <h2
                   className="text-2xl text-bark"
                   style={{ fontFamily: "var(--font-lora)" }}

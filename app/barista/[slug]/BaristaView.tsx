@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Menu } from "@/lib/menu";
+import { DrinkIcon } from "@/components/DrinkIcon";
 
 interface Order {
   id: number;
@@ -14,7 +15,7 @@ interface Order {
   created_at: string;
 }
 
-function getEmoji(menu: Menu | null, drinkId: string): string {
+function getIcon(menu: Menu | null, drinkId: string): string {
   if (!menu) return "☕";
   return menu.drinks.find((d) => d.id === drinkId)?.emoji ?? "☕";
 }
@@ -42,7 +43,7 @@ function describeCustomizations(
     const val = vals[id];
     if (def.type === "toggle" && val === true) {
       parts.push(def.label);
-    } else if (def.type === "select" && val && val !== def.default) {
+    } else if (def.type === "select" && val) {
       parts.push(String(val));
     }
   }
@@ -274,7 +275,7 @@ function OrderCard({
   onDone?: () => void;
   onRevert?: () => void;
 }) {
-  const emoji = getEmoji(menu, order.drink_id);
+  const icon = getIcon(menu, order.drink_id);
   const chips = describeCustomizations(order.customizations, menu, order.drink_id);
 
   return (
@@ -291,8 +292,9 @@ function OrderCard({
           <p className="font-semibold text-bark text-base leading-snug">
             {order.guest_name}
           </p>
-          <p className="text-bark mt-0.5">
-            {emoji} {order.drink_name}
+          <p className="text-bark mt-0.5 flex items-center gap-1.5">
+            <DrinkIcon icon={icon} emojiClassName="text-base leading-none" imgClassName="h-5 w-auto" />
+            {order.drink_name}
           </p>
           {chips.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
