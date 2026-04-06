@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://drinkbro-app.vercel.app"),
   title: "DrinkBro",
   description: "Order your drink, bro",
+  icons: { icon: "/icon.svg" },
   openGraph: {
     images: ["/opengraph-image"],
   },
