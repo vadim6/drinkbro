@@ -50,6 +50,7 @@ export default function DrinkPage({ slug }: { slug: string }) {
   const [nameHint, setNameHint] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const historySheetActive = useRef(false);
 
   useEffect(() => {
     fetch("/api/menu")
@@ -57,6 +58,21 @@ export default function DrinkPage({ slug }: { slug: string }) {
       .then(setMenu);
     const saved = localStorage.getItem("drinkbro_name");
     if (saved) setName(saved);
+  }, []);
+
+  useEffect(() => {
+    function onPopstate() {
+      if (!historySheetActive.current) return;
+      historySheetActive.current = false;
+      setSheetExiting(true);
+      setTimeout(() => {
+        setSheetVisible(false);
+        setSheetExiting(false);
+        setSelected(null);
+      }, 240);
+    }
+    window.addEventListener("popstate", onPopstate);
+    return () => window.removeEventListener("popstate", onPopstate);
   }, []);
 
   useEffect(() => {
@@ -81,9 +97,15 @@ export default function DrinkPage({ slug }: { slug: string }) {
     setCustomValues(buildCustomizationDefaults(drink, menu));
     setSheetVisible(true);
     setSheetExiting(false);
+    history.pushState(null, "");
+    historySheetActive.current = true;
   }
 
   function closeSheet() {
+    if (historySheetActive.current) {
+      historySheetActive.current = false;
+      history.back();
+    }
     setSheetExiting(true);
     setTimeout(() => {
       setSheetVisible(false);
