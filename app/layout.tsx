@@ -17,7 +17,6 @@ const lora = Lora({
 export const metadata: Metadata = {
   title: "DrinkBro",
   description: "Order your drink, bro",
-  icons: { icon: "/favicon.svg" },
 };
 
 export const viewport: Viewport = {
