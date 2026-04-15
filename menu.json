@@ -9,14 +9,15 @@
   },
 
 "drinks": [
-    { "id": "espresso",   "name": "Espresso",   "emoji": "/icons/americano.png", "customizations": ["size", "sugar"] },
+    { "id": "espresso",   "name": "Espresso",   "emoji": "/icons/espresso.png", "customizations": ["size", "sugar"] },
     { "id": "cortado",  "name": "Cortado", "emoji": "/icons/cortado.png", "customizations": ["milk", "sugar"] },
-    { "id": "americano",  "name": "Americano",  "emoji": "☕️", "customizations": ["size", "sugar"] },
-    { "id": "flatwhite",  "name": "Flat White", "emoji": "/icons/flatwhite.svg", "customizations": ["milk", "sugar"] },
+    { "id": "americano",  "name": "Americano",  "emoji": "/icons/americano.png", "customizations": ["size", "sugar"] },
+    { "id": "v60",  "name": "V60 Pourover",  "emoji": "/icons/v60.png", "customizations": [] },
+    { "id": "flatwhite",  "name": "Flat White", "emoji": "/icons/flat_white.png", "customizations": ["milk", "sugar"] },
     { "id": "cappuccino", "name": "Cappuccino", "emoji": "/icons/cappuccino.png", "customizations": ["milk", "sugar"] },
-    { "id": "matchalatte", "name": "Matcha Latte", "emoji": "🍵", "customizations": ["milk", "temp", "sugar"] },
-    { "id": "tea",        "name": "Tea",        "emoji": "🫖", "customizations": ["teaType", "sugar"] },
-    { "id": "water",      "name": "Water",      "emoji": "/icons/water.svg", "customizations": [] },
-    { "id": "juice",      "name": "Juice",      "emoji": "🧃", "customizations": ["flavor"] }
+    { "id": "matchalatte", "name": "Matcha Latte", "emoji": "/icons/matcha.png", "customizations": ["milk", "temp", "sugar"] },
+    { "id": "tea",        "name": "Tea",        "emoji": "/icons/tea.png", "customizations": ["teaType", "sugar"] },
+    { "id": "water",      "name": "Water",      "emoji": "/icons/water.png", "customizations": [] },
+    { "id": "juice",      "name": "Juice",      "emoji": "/icons/juice.png", "customizations": ["flavor"] }
   ]
 }

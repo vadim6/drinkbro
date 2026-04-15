@@ -204,9 +204,9 @@ export default function DrinkPage({ slug }: { slug: string }) {
           <button
             key={drink.id}
             onClick={() => openDrink(drink)}
-            className="flex flex-col items-center justify-center gap-2 bg-card rounded-3xl shadow-sm py-7 px-4 active:scale-95 transition-transform duration-100 border border-tan/40"
+            className="flex flex-col items-center justify-center gap-2 bg-card rounded-3xl shadow-sm py-4 px-3 active:scale-95 transition-transform duration-100 border border-tan/40"
           >
-            <DrinkIcon icon={drink.emoji} emojiClassName="text-5xl leading-none" imgClassName="h-14 w-auto" />
+            <DrinkIcon icon={drink.emoji} emojiClassName="text-5xl leading-none" imgClassName="h-24 w-auto" />
             <span className="text-sm font-semibold text-bark tracking-wide">
               {drink.name}
             </span>
