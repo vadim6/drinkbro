@@ -19,24 +19,6 @@ function buildCustomizationDefaults(
   return result;
 }
 
-function describeCustomizations(
-  values: CustomizationValues,
-  drink: DrinkDef,
-  menu: Menu
-): string[] {
-  const parts: string[] = [];
-  for (const id of drink.customizations) {
-    const def = menu.customizations[id];
-    if (!def) continue;
-    const val = values[id];
-    if (def.type === "toggle" && val === true) {
-      parts.push(def.label);
-    } else if (def.type === "select" && val !== def.default) {
-      parts.push(String(val));
-    }
-  }
-  return parts;
-}
 
 export default function DrinkPage({ slug }: { slug: string }) {
   const [menu, setMenu] = useState<Menu | null>(null);
@@ -319,20 +301,6 @@ export default function DrinkPage({ slug }: { slug: string }) {
                     </div>
                   ))}
                 </div>
-              )}
-
-              {/* Preview */}
-              {drinkCustomizations.length > 0 && (
-                <p className="text-sm text-muted mb-5 min-h-[1.25rem]">
-                  {(() => {
-                    const parts = describeCustomizations(
-                      customValues,
-                      selected,
-                      menu
-                    );
-                    return parts.length > 0 ? parts.join(" · ") : " ";
-                  })()}
-                </p>
               )}
 
               {/* Order button */}

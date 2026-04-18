@@ -1,11 +1,12 @@
 {
 "customizations": {
     "sugar":   { "label": "Sugar",   "type": "toggle", "default": false },
-    "milk":    { "label": "Milk",    "type": "select", "options": ["Whole", "Oat", "Almond"], "default": "Whole" },
+    "milk":    { "label": "Milk",    "type": "select", "options": ["Whole", "Oat"], "default": "Whole" },
     "size":    { "label": "Size",    "type": "select", "options": ["Single", "Double"], "default": "Single" },
     "teaType": { "label": "Type",    "type": "select", "options": ["Black", "Green"], "default": "Black" },
     "temp":    { "label": "Iced",    "type": "toggle", "default": false },
-    "flavor":  { "label": "Flavor",  "type": "select", "options": ["Orange", "Apple"], "default": "Orange" }
+    "flavor":  { "label": "Flavor",  "type": "select", "options": ["Orange", "Apple"], "default": "Orange" },
+    "waterType":  { "label": "Type",  "type": "select", "options": ["Still", "Sparkling"], "default": "Still" }
   },
 
 "drinks": [
@@ -15,9 +16,9 @@
     { "id": "v60",  "name": "V60 Pourover",  "emoji": "/icons/v60.png", "customizations": [] },
     { "id": "flatwhite",  "name": "Flat White", "emoji": "/icons/flat_white.png", "customizations": ["milk", "sugar"] },
     { "id": "cappuccino", "name": "Cappuccino", "emoji": "/icons/cappuccino.png", "customizations": ["milk", "sugar"] },
-    { "id": "matchalatte", "name": "Matcha Latte", "emoji": "/icons/matcha.png", "customizations": ["milk", "temp", "sugar"] },
+    { "id": "matchalatte", "name": "Tom's Matcha Latte", "emoji": "/icons/matcha.png", "customizations": ["milk", "temp", "sugar"] },
     { "id": "tea",        "name": "Tea",        "emoji": "/icons/tea.png", "customizations": ["teaType", "sugar"] },
-    { "id": "water",      "name": "Water",      "emoji": "/icons/water.png", "customizations": [] },
+    { "id": "water",      "name": "Water",      "emoji": "/icons/water.png", "customizations": ["waterType"] },
     { "id": "juice",      "name": "Juice",      "emoji": "/icons/juice.png", "customizations": ["flavor"] }
   ]
 }
