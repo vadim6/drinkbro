@@ -16,6 +16,7 @@
     { "id": "v60",  "name": "V60 Pourover",  "emoji": "/icons/v60.png", "customizations": [] },
     { "id": "flatwhite",  "name": "Flat White", "emoji": "/icons/flat_white.png", "customizations": ["milk", "sugar"] },
     { "id": "cappuccino", "name": "Cappuccino", "emoji": "/icons/cappuccino.png", "customizations": ["milk", "sugar"] },
+    { "id": "latte", "name": "Latte", "emoji": "/icons/latte.png", "customizations": ["milk", "temp", "sugar"] },
     { "id": "matchalatte", "name": "Tom's Matcha Latte", "emoji": "/icons/matcha.png", "customizations": ["milk", "temp", "sugar"] },
     { "id": "tea",        "name": "Tea",        "emoji": "/icons/tea.png", "customizations": ["teaType", "sugar"] },
     { "id": "water",      "name": "Water",      "emoji": "/icons/water.png", "customizations": ["waterType"] },
