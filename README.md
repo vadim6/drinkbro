@@ -12,6 +12,12 @@ Built with Next.js, Turso (SQLite), and Server-Sent Events for real-time updates
 
 Access is gated by a secret URL slug. Generate one and share it as a QR code — guests scan it and they're in. No accounts, no passwords.
 
+## Screenshots
+
+| Guest ordering | Barista dashboard |
+|---|---|
+| ![Guest view](demo_1.jpeg) | ![Barista view](demo_2.jpeg) |
+
 ## Getting started
 
 ```bash
